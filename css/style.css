@@ -1,0 +1,97 @@
+
+/**
+* APP MAIN STRUCTURE
+*/
+
+header, main {
+    width: 1000px;
+    margin: 20px auto;
+}
+
+.site_title {
+    height: 70px;
+    text-align: center;
+}
+
+section h2 {
+    line-height: 10%;
+    border-bottom: 2px solid #000;
+}
+
+section h2 span {
+    background-color: #fff;
+    padding: 0 10px 0 0;
+}
+
+.section_heading {
+    position: relative;
+    width: 100%;
+    display: table;
+}
+
+/**
+* END OF APP MAIN STRUCTURE
+*/
+
+
+
+/**
+* ROTATING TRIANGLE
+*/
+
+.fa.fa-caret-down {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    transition-duration: 1s;
+    outline: 0;
+}
+
+.rotate {
+    transition: all 2s linear;
+}
+
+.rotate.left{
+    transform-origin: 75% 47%;
+    transform: rotate(90deg);
+}
+
+span .fa.fa-caret-down {
+    background-color: #fff;
+    padding: 0 0 0 10px;
+}
+
+/**
+* END OF ROTATING TRIANGLE
+*/
+
+
+
+
+.section_content {
+    position: relative;
+    width: 100%;
+    display: table;
+    background-color: yellow;
+    transition: all 1s ease;
+}
+
+input[type=text] {
+    width: 130px;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 12px 20px 12px 40px;
+}
+
+#search_box_wrapper {
+    position: relative;
+}
+
+#search_box_wrapper:before {
+    font-family: 'FontAwesome';
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    content: "\f002";
+}
