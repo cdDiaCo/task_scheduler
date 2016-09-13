@@ -59,6 +59,7 @@ section h2 span {
 span .fa.fa-caret-down {
     background-color: #fff;
     padding: 0 0 0 10px;
+    cursor:pointer;
 }
 
 /**
