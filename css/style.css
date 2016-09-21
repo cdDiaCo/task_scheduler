@@ -17,6 +17,10 @@ header, main {
     text-align: center;
 }
 
+section {
+    margin-top: 10px;
+}
+
 section h2 {
     line-height: 10%;
     border-bottom: 2px solid #000;
