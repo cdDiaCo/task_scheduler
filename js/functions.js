@@ -4,6 +4,7 @@
 
 $(document).ready(function(){
     $(".triangleIconWrapper").click(rotateTriangleIcon);
+    $("#search_box_wrapper").find("input").keyup(searchExistingTasks_ajax);
 });
 
 function rotateTriangleIcon() {
@@ -27,3 +28,4 @@ function rotateTriangleIcon() {
         });
     }
 }
+
