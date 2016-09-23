@@ -116,7 +116,7 @@ span .fa.fa-caret-down {
 }
 
 
-input[type=text] {
+#search_box_wrapper input[type=text] {
     width: 130px;
     border: 2px solid black;
     border-radius: 4px;
@@ -124,3 +124,6 @@ input[type=text] {
 }
 
 
+.taskButton {
+    padding: 5px 10px;
+}

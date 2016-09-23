@@ -4,8 +4,23 @@
 
 $(document).ready(function(){
     $(".triangleIconWrapper").click(rotateTriangleIcon);
-    $("#search_box_wrapper").find("input").keyup(searchExistingTasks_ajax);
+    $("#search_box_wrapper").find("input").keyup(searchForExistingTasks_ajax);
 });
+
+var THESITENAME = (function() {
+    var noMatchingTasksText = false;
+
+    return {
+        isDisplayedNoMatchingTasksText: function() {
+            return noMatchingTasksText;
+        },
+        set_isDisplayedNoMatchingTasksText: function(newVal) {
+            noMatchingTasksText = newVal;
+        }
+    };
+
+}());
+
 
 function rotateTriangleIcon() {
     var triangleIcon =  $(this).find("i");
