@@ -41,7 +41,8 @@ function getMatchingTasks_serverSide(searchTerm) {
 function getAllTasks_serverSide() {
     return ["spalat WC", "spalat masina", "sapun", "spalat Linda", "scuturat patura",
         "spalat aragaz", "spalat chiuveta baie", "spalat chiuveta bucatarie",
-        "schimbat cearsafuri", "spalat covoras", "deparazitare caine"];
+        "schimbat cearsafuri", "spalat covoras", "spalat pe jos", "spalat geamurile",
+        "spalat usile", "sters praful", "deparazitare caine"];
 }
 
 //
