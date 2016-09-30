@@ -1,6 +1,7 @@
 $(document).ready(function(){
     $(".triangleIconWrapper").click(rotateTriangleIcon);
     $("#search_box_wrapper").find("input").keyup(searchForExistingTasks_ajax);
+    $("span.tip input").click(THESITENAME.CURRENT_SECTION.hideTip);
 });
 
 var THESITENAME = {};
@@ -14,6 +15,14 @@ THESITENAME.CURRENT_SECTION = (function() {
         },
         get: function() {
             return currentSection;
+        },
+        showTip: function() {
+            currentSection.find(".tip").show();
+        },
+        hideTip: function() {
+            currentSection.find(".tip").addClass("neverShowAgain");
+            currentSection.find(".neverShowAgain").removeClass("tip");
+            currentSection.find(".neverShowAgain").hide();
         }
     }
 }());
@@ -43,6 +52,7 @@ THESITENAME.MATCHING_TASKS = (function() {
                     }
                 }
             }
+            THESITENAME.CURRENT_SECTION.showTip();
         },
         add: function(task) {
             var section = THESITENAME.CURRENT_SECTION.get();

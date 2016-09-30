@@ -102,6 +102,19 @@ span .fa.fa-caret-down {
     margin: 2.5em auto;
 }
 
+span.tip {
+    display: none;
+}
+
+span.neverShowAgain {
+    display: none;
+}
+
+span.tip input {
+    border: none;
+    outline: none;
+}
+
 /**
 * END OF SECTION CONTENT
 */
@@ -144,4 +157,8 @@ span .fa.fa-caret-down {
     border-radius: 0.313em;
     border: none;
     margin: 0.32em 0.32em 0 0;
+}
+
+.matchingTasks {
+    margin: 0 0 1.875em 0;
 }
