@@ -1,7 +1,12 @@
 $(document).ready(function(){
     $(".triangleIconWrapper").click(rotateTriangleIcon);
-    $("#search_box_wrapper").find("input").keyup(searchForExistingTasks_ajax);
-    $("span.tip input").click(THESITENAME.CURRENT_SECTION.hideTip);
+    $("#search_box_wrapper").find("input").keyup(searchTasks);
+    $("span.tip input").click(THESITENAME.CURRENT_SECTION.hideTipPermanently);
+    $( "#datepicker" ).datepicker({
+        dateFormat: "yy-mm-dd"
+    });
+    $(".datepicker_wrapper").click(showDatePicker);
+    $("#addNewTaskForm").submit(submitAddNewTaskForm);
 });
 
 var THESITENAME = {};
@@ -17,12 +22,15 @@ THESITENAME.CURRENT_SECTION = (function() {
             return currentSection;
         },
         showTip: function() {
-            currentSection.find(".tip").show();
+            currentSection.find(".tip").removeClass("hidden");
         },
-        hideTip: function() {
+        hideTipPermanently: function() {
             currentSection.find(".tip").addClass("neverShowAgain");
             currentSection.find(".neverShowAgain").removeClass("tip");
             currentSection.find(".neverShowAgain").hide();
+        },
+        hideTipTemporarily: function() {
+            currentSection.find(".tip").addClass("hidden");
         }
     }
 }());
@@ -51,14 +59,14 @@ THESITENAME.MATCHING_TASKS = (function() {
                         THESITENAME.MATCHING_TASKS.add(matchedTasks[i]);
                     }
                 }
+                THESITENAME.CURRENT_SECTION.showTip();
             }
-            THESITENAME.CURRENT_SECTION.showTip();
         },
         add: function(task) {
             var section = THESITENAME.CURRENT_SECTION.get();
             section.find(".matchingTasks").append($('<input>')
                 .prop('type', 'button')
-                .val("" + task)
+                .val("" + task.taskName)
                 .addClass("taskButton")
             );
         }
@@ -102,7 +110,7 @@ THESITENAME.DISPLAYED_TASKS = (function() {
         isDisplayed: function(task) {
             var displayedTaskButtons = THESITENAME.DISPLAYED_TASKS.get();
             for (var i=0; i<displayedTaskButtons.length; i++) {
-                if( $(displayedTaskButtons[i]).val() === task ) {
+                if( $(displayedTaskButtons[i]).val() === task.taskName ) {
                     return true;
                 }
             }
@@ -114,6 +122,7 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             if( matchedTasks.length === 0 ) {
                 //there are no matched tasks, so remove the ones remained from the previous search term
                 $(displayedTaskButtons).remove();
+                THESITENAME.CURRENT_SECTION.hideTipTemporarily();
             }
             else {
                 if( THESITENAME.NO_MATCHING_TASKS.isDisplayed() ) {
@@ -143,28 +152,4 @@ THESITENAME.DISPLAYED_TASKS = (function() {
         }
     }
 }());
-
-
-
-function rotateTriangleIcon() {
-    var triangleIcon =  $(this).find("i");
-    var sectionContent = $(this).parent().next(".section_content");
-    var contentWrapper = $(sectionContent).find(".content_wrapper");
-
-    if( triangleIcon.hasClass("left") ) {
-        triangleIcon.removeClass("left");
-        sectionContent.removeClass("closed");
-        sectionContent.addClass("open");
-        setTimeout(function() {
-            contentWrapper.fadeToggle(500);
-        }, 700);
-    }
-    else {
-        triangleIcon.addClass("left");
-        sectionContent.removeClass("open");
-        contentWrapper.fadeToggle(500, function() {
-            sectionContent.addClass("closed");
-        });
-    }
-}
 

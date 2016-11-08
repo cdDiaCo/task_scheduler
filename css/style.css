@@ -98,11 +98,15 @@ span .fa.fa-caret-down {
 }
 
 .content_wrapper {
-    width: 50em;
+    width: 51em;
     margin: 2.5em auto;
 }
 
 span.tip {
+    display: inline;
+}
+
+span.tip.hidden {
     display: none;
 }
 
@@ -129,8 +133,8 @@ span.tip input {
     position: relative;
 }
 
-#search_box_wrapper:before {
-    font-family: 'FontAwesome';
+#search_box_wrapper::before {
+    font-family: 'FontAwesome', serif;
     font-size: 1.563em;
     position: absolute;
     top: 0.325em;
@@ -150,6 +154,99 @@ span.tip input {
 * END OF SEARCH BOX
 */
 
+
+/**
+* OVERWRITE DATE PICKER
+*/
+
+.ui-datepicker {
+    width: 12em;
+    padding: .2em .2em 0;
+    display: none;
+}
+
+.ui-datepicker table {
+    background-color: #f5f5f0;
+    width: 100%;
+    font-size: .9em;
+    border-collapse: collapse;
+    margin: 0 0 .4em;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: .2em 0;
+    background-color: #f5f5f0;
+}
+
+/**
+* END DATE PICKER
+*/
+
+
+/**
+* ADD NEW TASK - FORM
+*/
+
+#add_tasks input, select {
+    border-radius: 0.313em;
+    outline: none;
+    border: 1px solid black;
+    margin-right: 30px;
+}
+
+#add_tasks input {
+    padding: 7px;
+}
+
+#add_tasks input[type=submit] {
+    padding: 11px;
+}
+
+#add_tasks select {
+    padding: 6px;
+}
+
+input#datepicker {
+    width: 120px;
+    padding-left: 35px;
+}
+
+.datepicker_wrapper{
+    position:relative;
+}
+
+.datepicker_wrapper::after {
+    font-family: 'FontAwesome', serif;
+    font-size: 1.3em;
+    position: absolute;
+    top: -2px;
+    left: 0.425em;
+    content: "\f073";
+}
+
+
+#add_tasks input[type="checkbox"] {
+    margin-right: 1px;
+    margin-top: 15px;
+}
+
+#frequency {
+    display: inline-block;
+    margin-right: 30px;
+    width: 190px;
+    vertical-align: bottom;
+    position: relative;
+    top: 45px;
+}
+
+
+
+
+
+/**
+* END OF ADD NEW TASK SECTION - FORM
+*/
 
 
 .taskButton {
