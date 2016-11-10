@@ -77,3 +77,13 @@ function rotateTriangleIcon() {
         });
     }
 }
+
+function changePage() {
+    var section = THESITENAME.CURRENT_SECTION.get();
+    section.find(".paginationLink").removeClass("active");
+    $(this).addClass("active");
+    var requestedPage = parseInt($(this).text());
+    THESITENAME.DISPLAYED_TASKS.displayPage(requestedPage);
+}
+
+

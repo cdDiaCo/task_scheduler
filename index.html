@@ -31,7 +31,9 @@
             </div>
             <div class="section_content open">
                 <div class="content_wrapper">
-                    <p id="search_box_wrapper"><input type="text" name="searchTasks" placeholder="Search.."></p>
+                    <p id="search_box_wrapper">
+                        <input type="text" name="searchTasks" placeholder="Search..">
+                    </p>
                     <div class="matchingTasks">
 
                     </div>
@@ -58,35 +60,51 @@
                         </span>
 
                         <div id="frequency">
-                        <select name="taskFrequency">
-                            <option selected="selected" disabled>Select Frequency</option>
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="oneTime">One Time</option>
-                        </select>
-
-                        <input type="checkbox" name="readjust_frequency" value="true">
-                        Readjust frequency based on recorded activity
-
+                            <select name="taskFrequency">
+                                <option selected="selected" disabled>Select Frequency</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="oneTime">One Time</option>
+                            </select>
+                            <input type="checkbox" name="readjust_frequency" value="true">
+                            Readjust frequency based on recorded activity
                         </div>
 
                         <input type="submit" value="Add new task">
-
-
-
                     </form>
                 </div>
             </div>
         </section>
 
-        <section>
+        <section id="all_tasks">
             <div class="section_heading">
                 <h2><span>Your tasks</span></h2>
                 <span class="triangleIconWrapper"><i class="fa fa-caret-down fa-4x rotate down" aria-hidden="true"></i></span>
             </div>
             <div class="section_content open">
                 <div class="content_wrapper">
+                    <div id="sorting_buttons">
+                        <select name="frequency_filter">
+                            <option selected="selected" disabled>Frequency</option>
+                            <option value="daily_filter">Daily</option>
+                            <option value="weekly_filter">Weekly</option>
+                            <option value="monthly_filter">Monthly</option>
+                            <option value="oneTime_filter">One Time</option>
+                        </select>
+                        <select name="order_options">
+                            <option selected="selected" disabled>Order by</option>
+                            <option value="order_alphabetically_asc">Alphabetically A-Z</option>
+                            <option value="order_alphabetically_desc">Alphabetically Z-A</option>
+                            <option value="order_completed_recently">Completed recently</option>
+                        </select>
+                    </div>
+                    <div class="matchingTasks">
+                    </div>
+                    <div class="pagination_wrapper">
+                        <ul class="pagination">
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>

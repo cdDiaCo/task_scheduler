@@ -7,6 +7,7 @@ $(document).ready(function(){
     });
     $(".datepicker_wrapper").click(showDatePicker);
     $("#addNewTaskForm").submit(submitAddNewTaskForm);
+    getAllTasks();
 });
 
 var THESITENAME = {};
@@ -149,7 +150,87 @@ THESITENAME.DISPLAYED_TASKS = (function() {
                     }
                 }
             }
+        },
+        generatePagination: function(numOfMatchingTasks, numOfColumns, numOfTaskRowsPerPage ) {
+            var section = THESITENAME.CURRENT_SECTION.get();
+            var sectionID = section.attr("id");
+            var numOfPages = Math.floor(numOfMatchingTasks / (numOfColumns * numOfTaskRowsPerPage)) + 1;
+            for(var i=0; i<numOfPages; i++) {
+                section.find(".pagination_wrapper ul").append($('<li>')
+                                                        .append($('<a href="#' + sectionID + '">')
+                                                            .click(changePage)
+                                                            .addClass("paginationLink")
+                                                            .append($('<span>')
+                                                                .text(i+1))));
+            }
+        },
+        displayPage: function(requestedPage) {
+            var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
+            var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
+            var numOfAvailableTaskSpots = THESITENAME.ALL_TASKS.get_numOfAvailableTaskSpots();
+            var section = THESITENAME.CURRENT_SECTION.get();
+            section.find(".matchingTasks").empty();
+
+            var taskBtnMargin = taskWidth/10; // this means I like the margins to be one tenth of the taskWidth
+
+            // generating the task buttons according to:
+            //  the requested page number, num of available task spots in a page, and the number of total tasks
+            for (var i=(requestedPage-1)*numOfAvailableTaskSpots+1;
+                 i<allTasks.length && i<= requestedPage*numOfAvailableTaskSpots;
+                 i++) {
+                section.find(".matchingTasks").append($('<input>')
+                    .prop('type', 'button')
+                    .val("" + allTasks[i].taskName)
+                    .addClass("taskButton")
+                    .css({"width": taskWidth+"px", "margin-right": taskBtnMargin+"px", "margin-bottom": taskBtnMargin+"px"})
+                );
+            }
         }
     }
 }());
 
+THESITENAME.ALL_TASKS = (function() {
+    var allTasks;
+    var numOfAvailableTaskSpots;
+    return {
+        setAllTasks: function(data) {
+            allTasks = data;
+        },
+        getAllTasks: function() {
+            return allTasks;
+        },
+        set_numOfAvailableTaskSpots: function(num) {
+            numOfAvailableTaskSpots = num;
+        },
+        get_numOfAvailableTaskSpots: function() {
+            return numOfAvailableTaskSpots;
+        },
+        get_taskWidth: function() {
+            var contentWidth = parseInt($(".content_wrapper").css("width")); // get the width in px
+            contentWidth = contentWidth/parseInt($("html").css("font-size")); //convert to em
+            var taskWidth;
+            switch(contentWidth) {
+                case 51:
+                    taskWidth = 160;
+                    break;
+                case 60: // his is to be updated for real situations
+                    taskWidth = 170; // this is to be updated for real situations
+                    break;
+            }
+            return taskWidth;
+        },
+        display: function(allTasks) {
+            var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
+            var section = THESITENAME.CURRENT_SECTION.get();
+
+            var containerWidth = section.find(".matchingTasks").css("width");
+            var numOfColumns = Math.floor( parseInt(containerWidth)/taskWidth ) - 1;
+            var numOfTaskRowsPerPage = 4;
+            THESITENAME.ALL_TASKS.set_numOfAvailableTaskSpots( numOfColumns * numOfTaskRowsPerPage );
+
+            THESITENAME.DISPLAYED_TASKS.generatePagination(allTasks.length, numOfColumns, numOfTaskRowsPerPage);
+            section.find(".paginationLink").first().addClass("active");
+            THESITENAME.DISPLAYED_TASKS.displayPage(1); // request results for the first page
+        }
+    }
+}());

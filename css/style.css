@@ -240,20 +240,67 @@ input#datepicker {
     top: 45px;
 }
 
-
-
-
-
 /**
 * END OF ADD NEW TASK SECTION - FORM
 */
 
 
+
+/**
+*  ALL TASKS SECTION
+*/
+#all_tasks select {
+    border-radius: 0.313em;
+    outline: none;
+    border: 1px solid black;
+    margin-right: 30px;
+}
+
+#all_tasks select {
+    padding: 6px;
+}
+
+#sorting_buttons {
+    margin: 20px 0 40px 0;
+}
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination li {
+    display: inline;
+}
+
+.pagination li a {
+    padding: 3px 6px;
+    text-decoration: none;
+    border-right: 1px solid black;
+}
+
+.pagination li a:active {
+    color: black;
+}
+
+.pagination li:last-child a {
+    border: none;
+}
+
+.pagination li a.active {
+    background-color: black;
+    color: white;
+}
+/**
+*  END OF ALL TASKS SECTION
+*/
+
+
 .taskButton {
+    width: 160px;
     padding: 0.5em 0.75em;
     border-radius: 0.313em;
     border: none;
-    margin: 0.32em 0.32em 0 0;
+    /*margin: 0.32em 0.32em 2px 0;*/
 }
 
 .matchingTasks {
