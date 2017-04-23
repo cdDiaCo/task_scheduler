@@ -8,6 +8,10 @@ $(document).ready(function(){
     $(".datepicker_wrapper").click(showDatePicker);
     $("#addNewTaskForm").submit(submitAddNewTaskForm);
     getAllTasks();
+    $( "select[name=frequency_filter]" ).change(function() {
+        var frequency = $(this).find(":selected").text();
+        getAllTasksByFrequency(frequency);
+    });
 });
 
 var THESITENAME = {};
@@ -47,6 +51,7 @@ THESITENAME.MATCHING_TASKS = (function() {
             return matchedTasks;
         },
         display: function() {
+            //console.log("in display - Matching-tasks");
             THESITENAME.DISPLAYED_TASKS.removeUnnecessary(matchedTasks);
 
             if( (!matchedTasks || matchedTasks.length === 0)  && !THESITENAME.NO_MATCHING_TASKS.isDisplayed() ) {
@@ -64,6 +69,7 @@ THESITENAME.MATCHING_TASKS = (function() {
             }
         },
         add: function(task) {
+            //console.log("in add - MAtching-tasks");
             var section = THESITENAME.CURRENT_SECTION.get();
             section.find(".matchingTasks").append($('<input>')
                 .prop('type', 'button')
@@ -118,6 +124,7 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             return false;
         },
         removeUnnecessary: function(matchedTasks) {
+            //console.log("in removeUnnecessary - displayed tasks");
             var displayedTaskButtons = THESITENAME.DISPLAYED_TASKS.get();
 
             if( matchedTasks.length === 0 ) {
@@ -152,10 +159,13 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             }
         },
         generatePagination: function(numOfMatchingTasks, numOfColumns, numOfTaskRowsPerPage ) {
+            //console.log("in generatePagination - displayedTasks");
             var section = THESITENAME.CURRENT_SECTION.get();
             var sectionID = section.attr("id");
             var numOfPages = Math.floor(numOfMatchingTasks / (numOfColumns * numOfTaskRowsPerPage)) + 1;
+            THESITENAME.DISPLAYED_TASKS.removePagination(section);
             for(var i=0; i<numOfPages; i++) {
+                //console.log("numOfPages" + numOfPages);
                 section.find(".pagination_wrapper ul").append($('<li>')
                                                         .append($('<a href="#' + sectionID + '">')
                                                             .click(changePage)
@@ -164,10 +174,16 @@ THESITENAME.DISPLAYED_TASKS = (function() {
                                                                 .text(i+1))));
             }
         },
+        removePagination: function(section) {
+            section.find(".pagination_wrapper ul").empty();
+        },
         displayPage: function(requestedPage) {
+            //console.log("displayPAge - displayedd tasks");
             var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
             var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
+            //console.log("allTAsks" + allTasks);
             var numOfAvailableTaskSpots = THESITENAME.ALL_TASKS.get_numOfAvailableTaskSpots();
+            //console.log("numOfAvailableTAskSpots " + numOfAvailableTaskSpots);
             var section = THESITENAME.CURRENT_SECTION.get();
             section.find(".matchingTasks").empty();
 
@@ -175,9 +191,11 @@ THESITENAME.DISPLAYED_TASKS = (function() {
 
             // generating the task buttons according to:
             //  the requested page number, num of available task spots in a page, and the number of total tasks
-            for (var i=(requestedPage-1)*numOfAvailableTaskSpots+1;
-                 i<allTasks.length && i<= requestedPage*numOfAvailableTaskSpots;
+            for (var i=(requestedPage-1)*(numOfAvailableTaskSpots);
+                 i<allTasks.length && i< requestedPage*numOfAvailableTaskSpots;
                  i++) {
+                //console.log("i: " + i);
+                //console.log("alltasks.length: " + allTasks.length);
                 section.find(".matchingTasks").append($('<input>')
                     .prop('type', 'button')
                     .val("" + allTasks[i].taskName)
@@ -220,6 +238,7 @@ THESITENAME.ALL_TASKS = (function() {
             return taskWidth;
         },
         display: function(allTasks) {
+            //console.log("display - all tasks");
             var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
             var section = THESITENAME.CURRENT_SECTION.get();
 
