@@ -86,4 +86,20 @@ function changePage() {
     THESITENAME.DISPLAYED_TASKS.displayPage(requestedPage);
 }
 
+function getTasksByFrequency(frequencyType) {
+    var section = $("#all_tasks");
+    THESITENAME.CURRENT_SECTION.set(section);
+    var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
+    var filteredTasks = [];
+    for(var i=0; i<allTasks.length; i++) {
+        if( (allTasks[i].taskFrequency).toString() === frequencyType.toLowerCase() ) {
+            filteredTasks.push(allTasks[i]);
+        }
+    }
+    console.log(filteredTasks);
+    THESITENAME.ALL_TASKS.setFilteredTasks(filteredTasks);
+    THESITENAME.ALL_TASKS.setFrequencyFilter();
+    THESITENAME.ALL_TASKS.display(filteredTasks, frequencyType);
+}
+
 

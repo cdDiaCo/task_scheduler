@@ -10,7 +10,7 @@ $(document).ready(function(){
     getAllTasks();
     $( "select[name=frequency_filter]" ).change(function() {
         var frequency = $(this).find(":selected").text();
-        getAllTasksByFrequency(frequency);
+        getTasksByFrequency(frequency);
     });
 });
 
@@ -180,8 +180,15 @@ THESITENAME.DISPLAYED_TASKS = (function() {
         displayPage: function(requestedPage) {
             //console.log("displayPAge - displayedd tasks");
             var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
-            var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
-            //console.log("allTAsks" + allTasks);
+            var isFrequencyFilter = THESITENAME.ALL_TASKS.getFrequencyFilter();
+            var allTasks;
+            if(isFrequencyFilter) {
+                allTasks = THESITENAME.ALL_TASKS.getFilteredTasks();
+            }
+            else {
+                allTasks = THESITENAME.ALL_TASKS.getAllTasks();
+            }
+            //console.log(allTasks);
             var numOfAvailableTaskSpots = THESITENAME.ALL_TASKS.get_numOfAvailableTaskSpots();
             //console.log("numOfAvailableTAskSpots " + numOfAvailableTaskSpots);
             var section = THESITENAME.CURRENT_SECTION.get();
@@ -209,6 +216,8 @@ THESITENAME.DISPLAYED_TASKS = (function() {
 
 THESITENAME.ALL_TASKS = (function() {
     var allTasks;
+    var filteredTasks;
+    var isFrequencyFilter = false;
     var numOfAvailableTaskSpots;
     return {
         setAllTasks: function(data) {
@@ -216,6 +225,18 @@ THESITENAME.ALL_TASKS = (function() {
         },
         getAllTasks: function() {
             return allTasks;
+        },
+        setFilteredTasks: function(data) {
+            filteredTasks = data;
+        },
+        getFilteredTasks: function() {
+            return filteredTasks;
+        },
+        setFrequencyFilter: function() {
+            isFrequencyFilter = true;
+        },
+        getFrequencyFilter: function() {
+            return isFrequencyFilter;
         },
         set_numOfAvailableTaskSpots: function(num) {
             numOfAvailableTaskSpots = num;
@@ -237,8 +258,12 @@ THESITENAME.ALL_TASKS = (function() {
             }
             return taskWidth;
         },
-        display: function(allTasks) {
+        display: function(allTasks, frequencyType) {
             //console.log("display - all tasks");
+            var isFrequencyFilter = THESITENAME.ALL_TASKS.getFrequencyFilter();
+            if(isFrequencyFilter) {
+                THESITENAME.ALL_TASKS.addFilterTag(frequencyType);
+            }
             var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
             var section = THESITENAME.CURRENT_SECTION.get();
 
@@ -249,7 +274,24 @@ THESITENAME.ALL_TASKS = (function() {
 
             THESITENAME.DISPLAYED_TASKS.generatePagination(allTasks.length, numOfColumns, numOfTaskRowsPerPage);
             section.find(".paginationLink").first().addClass("active");
-            THESITENAME.DISPLAYED_TASKS.displayPage(1); // request results for the first page
+            THESITENAME.DISPLAYED_TASKS.displayPage(1, isFrequencyFilter); // request results for the first page
+        },
+        addFilterTag: function(frequencyType) {
+            $(".filterTagSection").append($('<div>')
+                .addClass("filterTag")
+                .append($('<span>')
+                    .text("" + frequencyType)
+                    .addClass("filterTagText"))
+                .append($('<input>')
+                    .prop('type', 'button')
+                    .val("x")
+                    .addClass("filterTagCloseBtn")
+                    .on('click', function() {
+                        THESITENAME.ALL_TASKS.removeFilterTag(this); }))
+                );
+        },
+        removeFilterTag: function(elem) {
+            $(elem).parent().remove();
         }
-    }
+     }
 }());

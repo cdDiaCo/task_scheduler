@@ -39,16 +39,19 @@ function getAllTasks() {
         });
 }
 
-function getAllTasksByFrequency(frequency) {
+/*
+function getAllTasksByFrequency(frequencyType) {
     var section = $("#all_tasks");
+    var isFrequencyFilter = true;
     THESITENAME.CURRENT_SECTION.set(section);
     $.get( "http://demo8922849.mockable.io/test.php", {'action': 'getAllTasksByFrequency', 'frequency': 'weekly'} )
         .done( function( data ) {
             //console.log(JSON.stringify(data));
-            THESITENAME.ALL_TASKS.setAllTasks(data);
-            THESITENAME.ALL_TASKS.display(data);
+            THESITENAME.ALL_TASKS.setAllTasks(data, isFrequencyFilter, frequencyType);
+            THESITENAME.ALL_TASKS.display(data, isFrequencyFilter, frequencyType);
         })
         .fail( function() {
-            //console.log("getAllTasksByFrequency failed");
+            console.log("getAllTasksByFrequency failed");
         });
 }
+*/

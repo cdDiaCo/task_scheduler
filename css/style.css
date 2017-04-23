@@ -290,6 +290,31 @@ input#datepicker {
     background-color: black;
     color: white;
 }
+
+.filterTagSection {
+    padding: 3px;
+    margin: 15px 0;
+}
+
+.filterTag {
+    padding: 3px;
+    margin-right: 10px;
+    border: 1px solid black;
+    display: inline;
+}
+
+.filterTagCloseBtn {
+    background-color: #448DD6;
+    border: none;
+    color: red;
+    font-weight: bolder;
+}
+
+.filterTagText {
+    border-right: 1px solid black;
+    padding-right: 5px;
+}
+
 /**
 *  END OF ALL TASKS SECTION
 */
