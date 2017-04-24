@@ -90,7 +90,8 @@ function getTasksByFrequency(frequencyType) {
     var section = $("#all_tasks");
     THESITENAME.CURRENT_SECTION.set(section);
     var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
-    var filteredTasks = [];
+    var filteredTasks = THESITENAME.ALL_TASKS.getFilteredTasks();
+
     for(var i=0; i<allTasks.length; i++) {
         if( (allTasks[i].taskFrequency).toString() === frequencyType.toLowerCase() ) {
             filteredTasks.push(allTasks[i]);

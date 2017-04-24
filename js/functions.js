@@ -216,7 +216,7 @@ THESITENAME.DISPLAYED_TASKS = (function() {
 
 THESITENAME.ALL_TASKS = (function() {
     var allTasks;
-    var filteredTasks;
+    var filteredTasks = [];
     var isFrequencyFilter = false;
     var numOfAvailableTaskSpots;
     return {
