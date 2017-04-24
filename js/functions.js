@@ -51,7 +51,6 @@ THESITENAME.MATCHING_TASKS = (function() {
             return matchedTasks;
         },
         display: function() {
-            //console.log("in display - Matching-tasks");
             THESITENAME.DISPLAYED_TASKS.removeUnnecessary(matchedTasks);
 
             if( (!matchedTasks || matchedTasks.length === 0)  && !THESITENAME.NO_MATCHING_TASKS.isDisplayed() ) {
@@ -69,7 +68,6 @@ THESITENAME.MATCHING_TASKS = (function() {
             }
         },
         add: function(task) {
-            //console.log("in add - MAtching-tasks");
             var section = THESITENAME.CURRENT_SECTION.get();
             section.find(".matchingTasks").append($('<input>')
                 .prop('type', 'button')
@@ -124,7 +122,6 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             return false;
         },
         removeUnnecessary: function(matchedTasks) {
-            //console.log("in removeUnnecessary - displayed tasks");
             var displayedTaskButtons = THESITENAME.DISPLAYED_TASKS.get();
 
             if( matchedTasks.length === 0 ) {
@@ -159,13 +156,11 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             }
         },
         generatePagination: function(numOfMatchingTasks, numOfColumns, numOfTaskRowsPerPage ) {
-            //console.log("in generatePagination - displayedTasks");
             var section = THESITENAME.CURRENT_SECTION.get();
             var sectionID = section.attr("id");
             var numOfPages = Math.floor(numOfMatchingTasks / (numOfColumns * numOfTaskRowsPerPage)) + 1;
             THESITENAME.DISPLAYED_TASKS.removePagination(section);
             for(var i=0; i<numOfPages; i++) {
-                //console.log("numOfPages" + numOfPages);
                 section.find(".pagination_wrapper ul").append($('<li>')
                                                         .append($('<a href="#' + sectionID + '">')
                                                             .click(changePage)
@@ -178,7 +173,6 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             section.find(".pagination_wrapper ul").empty();
         },
         displayPage: function(requestedPage) {
-            //console.log("displayPAge - displayedd tasks");
             var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
             var isFrequencyFilter = THESITENAME.ALL_TASKS.getFrequencyFilter();
             var allTasks;
@@ -188,9 +182,7 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             else {
                 allTasks = THESITENAME.ALL_TASKS.getAllTasks();
             }
-            //console.log(allTasks);
             var numOfAvailableTaskSpots = THESITENAME.ALL_TASKS.get_numOfAvailableTaskSpots();
-            //console.log("numOfAvailableTAskSpots " + numOfAvailableTaskSpots);
             var section = THESITENAME.CURRENT_SECTION.get();
             section.find(".matchingTasks").empty();
 
@@ -198,17 +190,15 @@ THESITENAME.DISPLAYED_TASKS = (function() {
 
             // generating the task buttons according to:
             //  the requested page number, num of available task spots in a page, and the number of total tasks
-            for (var i=(requestedPage-1)*(numOfAvailableTaskSpots);
-                 i<allTasks.length && i< requestedPage*numOfAvailableTaskSpots;
-                 i++) {
-                //console.log("i: " + i);
-                //console.log("alltasks.length: " + allTasks.length);
-                section.find(".matchingTasks").append($('<input>')
-                    .prop('type', 'button')
-                    .val("" + allTasks[i].taskName)
-                    .addClass("taskButton")
-                    .css({"width": taskWidth+"px", "margin-right": taskBtnMargin+"px", "margin-bottom": taskBtnMargin+"px"})
-                );
+            var start = (requestedPage-1)*(numOfAvailableTaskSpots);
+            var availableSpotsPerPage = requestedPage*numOfAvailableTaskSpots;
+            for (var i= start; i<allTasks.length && i<availableSpotsPerPage; i++) {
+                        section.find(".matchingTasks").append($('<input>')
+                            .prop('type', 'button')
+                            .val("" + allTasks[i].taskName)
+                            .addClass("taskButton")
+                            .css({"width": taskWidth+"px", "margin-right": taskBtnMargin+"px", "margin-bottom": taskBtnMargin+"px"})
+                        );
             }
         }
     }
@@ -218,6 +208,7 @@ THESITENAME.ALL_TASKS = (function() {
     var allTasks;
     var filteredTasks = [];
     var isFrequencyFilter = false;
+    var filterTagsArray = [];
     var numOfAvailableTaskSpots;
     return {
         setAllTasks: function(data) {
@@ -237,6 +228,12 @@ THESITENAME.ALL_TASKS = (function() {
         },
         getFrequencyFilter: function() {
             return isFrequencyFilter;
+        },
+        setFilterTagsArray: function(array) {
+            filterTagsArray = array;
+        },
+        getFilterTagsArray: function() {
+            return filterTagsArray;
         },
         set_numOfAvailableTaskSpots: function(num) {
             numOfAvailableTaskSpots = num;
@@ -258,12 +255,8 @@ THESITENAME.ALL_TASKS = (function() {
             }
             return taskWidth;
         },
-        display: function(allTasks, frequencyType) {
-            //console.log("display - all tasks");
+        display: function(allTasks) {
             var isFrequencyFilter = THESITENAME.ALL_TASKS.getFrequencyFilter();
-            if(isFrequencyFilter) {
-                THESITENAME.ALL_TASKS.addFilterTag(frequencyType);
-            }
             var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
             var section = THESITENAME.CURRENT_SECTION.get();
 
@@ -292,6 +285,32 @@ THESITENAME.ALL_TASKS = (function() {
         },
         removeFilterTag: function(elem) {
             $(elem).parent().remove();
+            var frequencyType = ($(elem).siblings().text()).toLowerCase();
+
+            var filterTagsArray = THESITENAME.ALL_TASKS.getFilterTagsArray();
+            for(var i=0; i<filterTagsArray.length; i++) {
+                if(filterTagsArray[i] === frequencyType) {
+                    filterTagsArray.splice(i, 1);
+                    console.log(filterTagsArray);
+                    break;
+                }
+            }
+            THESITENAME.ALL_TASKS.setFilterTagsArray(filterTagsArray);
+            THESITENAME.ALL_TASKS.removeUnnecessaryFilteredTasks(frequencyType);
+        },
+        removeUnnecessaryFilteredTasks: function(frequencyType) {
+            var filteredTasks = THESITENAME.ALL_TASKS.getFilteredTasks();
+            for(var i=0; i<filteredTasks.length;) {
+                if( (filteredTasks[i].taskFrequency).toString() === frequencyType) {
+                    filteredTasks.splice(i, 1);
+                }
+                else {
+                    i++;
+                }
+            }
+            THESITENAME.ALL_TASKS.setFilteredTasks(filteredTasks);
+            console.log(filteredTasks);
+            THESITENAME.ALL_TASKS.display(filteredTasks);
         }
      }
 }());
