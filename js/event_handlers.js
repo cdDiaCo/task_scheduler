@@ -98,12 +98,12 @@ function getTasksByFrequency(frequencyType) {
         }
     }
     THESITENAME.ALL_TASKS.setFilteredTasks(filteredTasks);
-    THESITENAME.ALL_TASKS.setFrequencyFilter();
+    THESITENAME.ALL_TASKS.setFrequencyFilter(true);
     THESITENAME.ALL_TASKS.addFilterTag(frequencyType);
     var filterTagsArray = THESITENAME.ALL_TASKS.getFilterTagsArray();
     filterTagsArray.push(frequencyType.toLowerCase());
     THESITENAME.ALL_TASKS.setFilterTagsArray(filterTagsArray);
-    THESITENAME.ALL_TASKS.display(filteredTasks);
+    THESITENAME.ALL_TASKS.display();
 }
 
 

@@ -32,7 +32,7 @@ function getAllTasks() {
         .done( function( data ) {
             //console.log(JSON.stringify(data));
             THESITENAME.ALL_TASKS.setAllTasks(data);
-            THESITENAME.ALL_TASKS.display(data);
+            THESITENAME.ALL_TASKS.display();
         })
         .fail( function() {
             //console.log("getAllTasks failed");

@@ -155,9 +155,13 @@ THESITENAME.DISPLAYED_TASKS = (function() {
                 }
             }
         },
-        generatePagination: function(numOfMatchingTasks, numOfColumns, numOfTaskRowsPerPage ) {
+        generatePagination: function(numOfColumns, numOfTaskRowsPerPage ) {
             var section = THESITENAME.CURRENT_SECTION.get();
             var sectionID = section.attr("id");
+
+            var tasks = THESITENAME.ALL_TASKS.getTasks();
+
+            var numOfMatchingTasks = tasks.length;
             var numOfPages = Math.floor(numOfMatchingTasks / (numOfColumns * numOfTaskRowsPerPage)) + 1;
             THESITENAME.DISPLAYED_TASKS.removePagination(section);
             for(var i=0; i<numOfPages; i++) {
@@ -173,29 +177,26 @@ THESITENAME.DISPLAYED_TASKS = (function() {
             section.find(".pagination_wrapper ul").empty();
         },
         displayPage: function(requestedPage) {
-            var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
-            var isFrequencyFilter = THESITENAME.ALL_TASKS.getFrequencyFilter();
-            var allTasks;
-            if(isFrequencyFilter) {
-                allTasks = THESITENAME.ALL_TASKS.getFilteredTasks();
-            }
-            else {
-                allTasks = THESITENAME.ALL_TASKS.getAllTasks();
-            }
-            var numOfAvailableTaskSpots = THESITENAME.ALL_TASKS.get_numOfAvailableTaskSpots();
             var section = THESITENAME.CURRENT_SECTION.get();
+            if(requestedPage === 1) {
+                section.find(".paginationLink").first().addClass("active");
+            }
+
             section.find(".matchingTasks").empty();
 
+            var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
             var taskBtnMargin = taskWidth/10; // this means I like the margins to be one tenth of the taskWidth
 
             // generating the task buttons according to:
             //  the requested page number, num of available task spots in a page, and the number of total tasks
+            var numOfAvailableTaskSpots = THESITENAME.ALL_TASKS.get_numOfAvailableTaskSpots();
+            var tasks = THESITENAME.ALL_TASKS.getTasks();
             var start = (requestedPage-1)*(numOfAvailableTaskSpots);
             var availableSpotsPerPage = requestedPage*numOfAvailableTaskSpots;
-            for (var i= start; i<allTasks.length && i<availableSpotsPerPage; i++) {
+            for (var i= start; i<tasks.length && i<availableSpotsPerPage; i++) {
                         section.find(".matchingTasks").append($('<input>')
                             .prop('type', 'button')
-                            .val("" + allTasks[i].taskName)
+                            .val("" + tasks[i].taskName)
                             .addClass("taskButton")
                             .css({"width": taskWidth+"px", "margin-right": taskBtnMargin+"px", "margin-bottom": taskBtnMargin+"px"})
                         );
@@ -223,8 +224,8 @@ THESITENAME.ALL_TASKS = (function() {
         getFilteredTasks: function() {
             return filteredTasks;
         },
-        setFrequencyFilter: function() {
-            isFrequencyFilter = true;
+        setFrequencyFilter: function(bool) {
+            isFrequencyFilter = bool;
         },
         getFrequencyFilter: function() {
             return isFrequencyFilter;
@@ -255,19 +256,18 @@ THESITENAME.ALL_TASKS = (function() {
             }
             return taskWidth;
         },
-        display: function(allTasks) {
-            var isFrequencyFilter = THESITENAME.ALL_TASKS.getFrequencyFilter();
+        display: function() {
             var taskWidth = THESITENAME.ALL_TASKS.get_taskWidth();
             var section = THESITENAME.CURRENT_SECTION.get();
-
             var containerWidth = section.find(".matchingTasks").css("width");
             var numOfColumns = Math.floor( parseInt(containerWidth)/taskWidth ) - 1;
+            // the next variable value is chosen by me, but at some point in the future it may become dynamic
             var numOfTaskRowsPerPage = 4;
-            THESITENAME.ALL_TASKS.set_numOfAvailableTaskSpots( numOfColumns * numOfTaskRowsPerPage );
 
-            THESITENAME.DISPLAYED_TASKS.generatePagination(allTasks.length, numOfColumns, numOfTaskRowsPerPage);
-            section.find(".paginationLink").first().addClass("active");
-            THESITENAME.DISPLAYED_TASKS.displayPage(1, isFrequencyFilter); // request results for the first page
+            THESITENAME.ALL_TASKS.set_numOfAvailableTaskSpots( numOfColumns * numOfTaskRowsPerPage );
+            THESITENAME.DISPLAYED_TASKS.generatePagination(numOfColumns, numOfTaskRowsPerPage);
+
+            THESITENAME.DISPLAYED_TASKS.displayPage(1); // request results for the first page
         },
         addFilterTag: function(frequencyType) {
             $(".filterTagSection").append($('<div>')
@@ -295,10 +295,13 @@ THESITENAME.ALL_TASKS = (function() {
                     break;
                 }
             }
+
             THESITENAME.ALL_TASKS.setFilterTagsArray(filterTagsArray);
             THESITENAME.ALL_TASKS.removeUnnecessaryFilteredTasks(frequencyType);
         },
         removeUnnecessaryFilteredTasks: function(frequencyType) {
+            // this is used when the user cancels a filter tag
+            // therefore the tasks associated with that filter tag must not be displayed
             var filteredTasks = THESITENAME.ALL_TASKS.getFilteredTasks();
             for(var i=0; i<filteredTasks.length;) {
                 if( (filteredTasks[i].taskFrequency).toString() === frequencyType) {
@@ -308,9 +311,32 @@ THESITENAME.ALL_TASKS = (function() {
                     i++;
                 }
             }
+
             THESITENAME.ALL_TASKS.setFilteredTasks(filteredTasks);
             console.log(filteredTasks);
-            THESITENAME.ALL_TASKS.display(filteredTasks);
+            var filterTagsArray = THESITENAME.ALL_TASKS.getFilterTagsArray();
+            if(filterTagsArray.length === 0) {
+                //if no filter tags are applied, show all tasks
+                THESITENAME.ALL_TASKS.setFrequencyFilter(false);
+                THESITENAME.ALL_TASKS.display();
+            }
+            else {
+                // show filtered tasks
+                THESITENAME.ALL_TASKS.display();
+            }
+        },
+        getTasks: function() {
+            //this returns either allTasks or filteredTasks
+            var isFrequencyFilter = THESITENAME.ALL_TASKS.getFrequencyFilter();
+            var tasks;
+            if(isFrequencyFilter) {
+                tasks = THESITENAME.ALL_TASKS.getFilteredTasks();
+            }
+            else {
+                tasks = THESITENAME.ALL_TASKS.getAllTasks();
+            }
+            return tasks;
         }
+
      }
 }());
