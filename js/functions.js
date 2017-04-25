@@ -318,6 +318,7 @@ THESITENAME.ALL_TASKS = (function() {
             if(filterTagsArray.length === 0) {
                 //if no filter tags are applied, show all tasks
                 THESITENAME.ALL_TASKS.setFrequencyFilter(false);
+                THESITENAME.ALL_TASKS.setFrequencyBoxToDefault();
                 THESITENAME.ALL_TASKS.display();
             }
             else {
@@ -336,6 +337,9 @@ THESITENAME.ALL_TASKS = (function() {
                 tasks = THESITENAME.ALL_TASKS.getAllTasks();
             }
             return tasks;
+        },
+        setFrequencyBoxToDefault: function() {
+            $('select[name="frequency_filter"]').val("Frequency");
         }
 
      }
