@@ -33,6 +33,7 @@ function getAllTasks() {
             //console.log(JSON.stringify(data));
             THESITENAME.ALL_TASKS.setAllTasks(data);
             THESITENAME.ALL_TASKS.display();
+            THESITENAME.ALL_TASKS.countAllTasksByFrequency();
         })
         .fail( function() {
             //console.log("getAllTasks failed");

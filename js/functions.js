@@ -361,8 +361,35 @@ THESITENAME.ALL_TASKS = (function() {
             return tasks;
         },
         setFrequencyBoxToDefault: function() {
-            $('select[name="frequency_filter"]').val("Frequency");
+            $('select[name="frequency_filter"]').val("frequency");
+        },
+        countAllTasksByFrequency: function() {
+            var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
+            var frequencyTypeList = [];
+            $('select[name="frequency_filter"] option').each(function() {
+                var frequencyElem = [ $(this).val(), 0 ];
+                frequencyTypeList.push(frequencyElem);
+            });
+            for(var i=1; i<frequencyTypeList.length; i++) {
+                for(j=0; j<allTasks.length; j++) {
+                    if(allTasks[j].taskFrequency === frequencyTypeList[i][0]) {
+                        frequencyTypeList[i][1]++;
+                    }
+                }
+            }
+            console.log(frequencyTypeList);
+            THESITENAME.ALL_TASKS.disableFrequencyTypesWithoutTasks(frequencyTypeList);
+        },
+        disableFrequencyTypesWithoutTasks: function(frequencyTypeList) {
+            for(var i=1; i<frequencyTypeList.length; i++) {
+                if(frequencyTypeList[i][1] === 0) {
+                    var frequency = frequencyTypeList[i][0];
+                    var correspondingSelectOption = $('select[name="frequency_filter"] option[value="'+ frequency +'"]');
+                    $(correspondingSelectOption).attr("disabled", "disabled");
+                    var frequencyText = $(correspondingSelectOption).text();
+                    $(correspondingSelectOption).text(frequencyText + " (no tasks)");
+                }
+            }
         }
-
      }
 }());
