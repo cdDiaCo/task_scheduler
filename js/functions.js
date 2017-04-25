@@ -270,18 +270,40 @@ THESITENAME.ALL_TASKS = (function() {
             THESITENAME.DISPLAYED_TASKS.displayPage(1); // request results for the first page
         },
         addFilterTag: function(frequencyType) {
-            $(".filterTagSection").append($('<div>')
-                .addClass("filterTag")
-                .append($('<span>')
-                    .text("" + frequencyType)
-                    .addClass("filterTagText"))
-                .append($('<input>')
-                    .prop('type', 'button')
-                    .val("x")
-                    .addClass("filterTagCloseBtn")
-                    .on('click', function() {
-                        THESITENAME.ALL_TASKS.removeFilterTag(this); }))
+            //this function returns false if the filter already exists, true otherwise
+            var isAlreadyAdded = THESITENAME.ALL_TASKS.isFilterTagAlreadyAdded(frequencyType);
+
+            if (!isAlreadyAdded) {
+                $(".filterTagSection").append($('<div>')
+                    .addClass("filterTag")
+                    .append($('<span>')
+                        .text("" + frequencyType)
+                        .addClass("filterTagText"))
+                    .append($('<input>')
+                        .prop('type', 'button')
+                        .val("x")
+                        .addClass("filterTagCloseBtn")
+                        .on('click', function () {
+                            THESITENAME.ALL_TASKS.removeFilterTag(this);
+                        }))
                 );
+                return true;
+            }
+            return false;
+        },
+        isFilterTagAlreadyAdded: function(frequencyType) {
+            console.log(frequencyType);
+            var filterTagsArray = THESITENAME.ALL_TASKS.getFilterTagsArray();
+            console.log(filterTagsArray);
+
+            if(filterTagsArray.length > 0) {
+                for(var i=0; i<filterTagsArray.length; i++) {
+                    if(filterTagsArray[i] === frequencyType.toLowerCase()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         },
         removeFilterTag: function(elem) {
             $(elem).parent().remove();

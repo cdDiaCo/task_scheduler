@@ -89,21 +89,25 @@ function changePage() {
 function getTasksByFrequency(frequencyType) {
     var section = $("#all_tasks");
     THESITENAME.CURRENT_SECTION.set(section);
-    var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
-    var filteredTasks = THESITENAME.ALL_TASKS.getFilteredTasks();
+    var success = THESITENAME.ALL_TASKS.addFilterTag(frequencyType);
+    if(success) {
+        var allTasks = THESITENAME.ALL_TASKS.getAllTasks();
+        var filteredTasks = THESITENAME.ALL_TASKS.getFilteredTasks();
 
-    for(var i=0; i<allTasks.length; i++) {
-        if( (allTasks[i].taskFrequency).toString() === frequencyType.toLowerCase() ) {
-            filteredTasks.push(allTasks[i]);
+        for(var i=0; i<allTasks.length; i++) {
+            if( (allTasks[i].taskFrequency).toString() === frequencyType.toLowerCase() ) {
+                filteredTasks.push(allTasks[i]);
+            }
         }
+        THESITENAME.ALL_TASKS.setFilteredTasks(filteredTasks);
+        THESITENAME.ALL_TASKS.setFrequencyFilter(true);
+
+        var filterTagsArray = THESITENAME.ALL_TASKS.getFilterTagsArray();
+        filterTagsArray.push(frequencyType.toLowerCase());
+        THESITENAME.ALL_TASKS.setFilterTagsArray(filterTagsArray);
+        THESITENAME.ALL_TASKS.display();
     }
-    THESITENAME.ALL_TASKS.setFilteredTasks(filteredTasks);
-    THESITENAME.ALL_TASKS.setFrequencyFilter(true);
-    THESITENAME.ALL_TASKS.addFilterTag(frequencyType);
-    var filterTagsArray = THESITENAME.ALL_TASKS.getFilterTagsArray();
-    filterTagsArray.push(frequencyType.toLowerCase());
-    THESITENAME.ALL_TASKS.setFilterTagsArray(filterTagsArray);
-    THESITENAME.ALL_TASKS.display();
+
 }
 
 
